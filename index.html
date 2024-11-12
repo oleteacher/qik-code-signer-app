@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qik Code Signer App by QikSoft.com</title>
+	
+	<style>
+		:root {
+			/* Light Theme */
+			--primary-color: #3498db;
+			--primary-hover: #2980b9;
+			--secondary-color: #664d00;
+			--secondary-hover: #8B6914;
+			--background: #f5f5f5;
+			--card-bg: #ffffff;
+			--text-primary: #2c3e50;
+			--text-secondary: #7f8c8d;
+			--border-color: #ddd;
+			--input-bg: #ffffff;
+			--section-bg: #f8f9fa;
+			--code-bg: #f8f9fa;
+			--scrollbar-track: #f5f5f5;
+			--scrollbar-thumb: #333;
+			--scrollbar-thumb-hover: #555;
+			--success-bg: #d4edda;
+			--success-text: #155724;
+			--error-bg: #f8d7da;
+			--error-text: #721c24;
+			--help-tip-bg: #e0e0e0;
+			--help-tip-text: #333;
+			--shadow-color: rgba(0, 0, 0, 0.1);
+		}
+
+		/* Dark Theme */
+		[data-theme="dark"] {
+			--primary-color: #3498db;
+			--primary-hover: #2980b9;
+			--secondary-color: #b38600;
+			--secondary-hover: #cc9900;
+			--background: #1a1a1a;
+			--card-bg: #2d2d2d;
+			--text-primary: #ffffff;
+			--text-secondary: #b3b3b3;
+			--border-color: #404040;
+			--input-bg: #333333;
+			--section-bg: #363636;
+			--code-bg: #2b2b2b;
+			--scrollbar-track: #2d2d2d;
+			--scrollbar-thumb: #666;
+			--scrollbar-thumb-hover: #888;
+			--success-bg: #1e4620;
+			--success-text: #75b798;
+			--error-bg: #842029;
+			--error-text: #ea868f;
+			--help-tip-bg: #4d4d4d;
+			--help-tip-text: #ffffff;
+			--shadow-color: rgba(0, 0, 0, 0.3);
+		}
+
+		* {
+			transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+		}
+
+		::-webkit-scrollbar {
+			width: 10px;
+			height: 8px;
+		}
+
+		::-webkit-scrollbar-track {
+			background: var(--scrollbar-track);
+			border-radius: 4px;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: var(--scrollbar-thumb);
+			border-radius: 4px;
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: var(--scrollbar-thumb-hover);
+		}
+
+		body {
+			font-family: 'Segoe UI', Arial, sans-serif;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: var(--background);
+			color: var(--text-primary);
+		}
+
+		.container {
+			background-color: var(--card-bg);
+			padding: 30px;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px var(--shadow-color);
+		}
+
+		h1 {
+			color: var(--text-primary);
+			margin-bottom: 30px;
+			text-align: center;
+		}
+
+		h2, h3 {
+			color: var(--text-primary);
+		}
+
+		.section, .section-btn {
+			margin: 15px 0;
+			padding: 20px;
+			background-color: var(--section-bg);
+			border-radius: 6px;
+			border: 1px solid var(--border-color);
+		}
+
+		input[type="text"] {
+			width: 100%;
+			padding: 8px;
+			margin: 8px 0;
+			background-color: var(--input-bg);
+			color: var(--text-primary);
+			border: 1px solid var(--border-color);
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
+
+		button {
+			background-color: var(--primary-color);
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: background-color 0.3s;
+		}
+
+		button:hover:not(:disabled) {
+			background-color: var(--primary-hover);
+		}
+
+		button:disabled {
+			background-color: var(--text-secondary);
+			cursor: not-allowed;
+		}
+
+		.button-sign {
+			background-color: var(--secondary-color);
+		}
+
+		.button-sign:hover:not(:disabled) {
+			background-color: var(--secondary-hover);
+		}
+
+		.radio-group {
+			margin: 15px 0;
+		}
+
+		.radio-option {
+			margin: 8px 0;
+			display: flex;
+			align-items: center;
+		}
+
+		.radio-option label {
+			margin-left: 5px;
+			cursor: pointer;
+			color: var(--text-primary);
+		}
+
+		.help-tip {
+			display: inline-block;
+			margin-left: 8px;
+			width: 18px;
+			height: 18px;
+			text-align: center;
+			background: var(--help-tip-bg);
+			color: var(--help-tip-text);
+			border-radius: 50%;
+			font-size: 12px;
+			line-height: 18px;
+			cursor: help;
+			position: relative;
+		}
+
+		.help-tip:hover::after {
+			content: attr(data-help);
+			position: absolute;
+			left: 100%;
+			margin-left: 10px;
+			top: 50%;
+			transform: translateY(-50%);
+			background: var(--text-primary);
+			color: var(--card-bg);
+			padding: 8px 12px;
+			border-radius: 4px;
+			font-size: 13px;
+			white-space: nowrap;
+			z-index: 100;
+		}
+
+		.file-info {
+			margin-top: 10px;
+			color: var(--text-secondary);
+			word-break: break-all;
+		}
+
+		#result {
+			margin-top: 20px;
+			padding: 10px;
+			border-radius: 4px;
+		}
+
+		.success {
+			background-color: var(--success-bg);
+			color: var(--success-text);
+		}
+
+		.error {
+			background-color: var(--error-bg);
+			color: var(--error-text);
+		}
+
+		code {
+			background-color: var(--code-bg);
+			padding: 2px 4px;
+			border-radius: 4px;
+			font-family: monospace;
+			color: var(--text-primary);
+		}
+
+		.version {
+			text-align: center;
+			color: var(--text-secondary);
+			margin: 10px 0;
+		}
+
+		.loader {
+			display: none;
+			margin: 20px auto;
+			border: 4px solid var(--border-color);
+			border-top: 4px solid var(--primary-color);
+			border-radius: 50%;
+			width: 40px;
+			height: 40px;
+			animation: spin 1s linear infinite;
+		}
+
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+		.status-text {
+			text-align: center;
+			color: var(--text-secondary);
+			margin: 10px 0;
+		}
+
+		.hidden {
+			display: none;
+		}
+	</style>
+	
+	<script src="theme.js"></script>
+	
+</head>
+<body>
+    <div class="container">
+        <h1>Qik Code Signer App</h1>
+        
+        <div class="section">
+            <h3>SignTool Location</h3>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="useBuiltin" name="signtoolChoice" value="builtin" checked>
+                    <label for="useBuiltin">Use built-in SignTool</label>
+                    <div class="help-tip" data-help="Uses the SignTool.exe included with this application">?</div>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="useCustom" name="signtoolChoice" value="custom">
+                    <label for="useCustom">Select custom SignTool</label>
+                    <div class="help-tip" data-help="Use your own SignTool.exe (typically found in Windows SDK)">?</div>
+                </div>
+            </div>
+            <button id="selectSigntool" class="hidden">Select SignTool.exe</button>
+            <div id="selectedSigntool" class="file-info"></div>
+        </div>
+
+        <div class="section">
+            <h3>Signing Configuration <span class="help-tip" data-help="Enter your certificate thumbprint...">?</span></h3>
+            <input type="text" id="hashInput" placeholder="Enter SHA1 Hash" 
+                   value="b1592a712c39cddfa2a22f24da391291eff5ac56">
+        </div>
+		
+		<div class="section-btn">
+            <button id="selectFile">Select EXE to Sign</button>
+			<button class="button-sign" id="signButton" disabled>Sign File</button>
+            <div id="selectedFile" class="file-info"></div>
+        </div>
+
+<!--<div class="sign-button-container">
+    <button id="signButton" disabled>Sign File</button>
+</div>-->
+
+        
+        <div class="loader" id="loader"></div>
+        <div class="status-text" id="statusText"></div>
+        <div id="result"></div>
+    </div>
+    <script>
+		
+		let selectedFilePath = null;
+        let customSigntoolPath = null;
+
+        document.querySelectorAll('input[name="signtoolChoice"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.getElementById('selectSigntool').classList.toggle('hidden', e.target.value === 'builtin');
+                if (e.target.value === 'builtin') {
+                    document.getElementById('selectedSigntool').textContent = '';
+                    customSigntoolPath = null;
+                }
+            });
+        });
+
+        document.getElementById('selectSigntool').addEventListener('click', () => {
+            window.ipcRenderer.send('select-signtool');
+        });
+
+        document.getElementById('selectFile').addEventListener('click', () => {
+            window.ipcRenderer.send('select-file');
+        });
+
+        document.getElementById('signButton').addEventListener('click', () => {
+            const hashInput = document.getElementById('hashInput').value;
+            const useCustomSigntool = document.getElementById('useCustom').checked;
+            
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('statusText').textContent = 'Signing in progress...';
+            document.getElementById('signButton').disabled = true;
+            document.getElementById('result').className = '';
+            document.getElementById('result').textContent = '';
+            
+            window.ipcRenderer.send('sign-file', { 
+                filePath: selectedFilePath, 
+                sha1Hash: hashInput,
+                signtoolPath: useCustomSigntool ? customSigntoolPath : null
+            });
+        });
+
+        window.ipcRenderer.on('signtool-selected', (path) => {
+            customSigntoolPath = path;
+            document.getElementById('selectedSigntool').textContent = path;
+        });
+
+        window.ipcRenderer.on('file-selected', (filePath) => {
+            selectedFilePath = filePath;
+            const filename = filePath.split('\\').pop().split('/').pop();
+            document.getElementById('selectedFile').textContent = filename;
+            document.getElementById('signButton').disabled = false;
+        });
+
+        window.ipcRenderer.on('sign-result', (message) => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('statusText').textContent = '';
+            document.getElementById('signButton').disabled = false;
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = message.toLowerCase().includes('error') ? 'error' : 'success';
+        });
+    </script>
+</body>
+</html>
